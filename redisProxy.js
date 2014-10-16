@@ -9,11 +9,7 @@ function connection(config) {
     this.remotePort = config.remotePort;
 }
 
-var GCmdMap = {
-    set: true,
-    append: true,
-    mset: true,
-}
+var GCmdMap = configData.cmdMap;
 
 
 var GremoteWriteConfig = {
@@ -70,8 +66,8 @@ connection.prototype.parseProtocol = function(buffer) {
     var _cmds     = s.split('\r\n').slice(0, -1);
     var _argNum   = parseInt(s.slice(1, 2))
 
-    console.log('Get cmds ', _cmds);
-    console.log('Get argnum ', _argNum);
+    // console.log('Get cmds ', _cmds);
+    // console.log('Get argnum ', _argNum);
     if (isNaN(_argNum)) {
         return false;
     }
@@ -82,7 +78,7 @@ connection.prototype.parseProtocol = function(buffer) {
 
     for( var i = 1; i < _cmds.length; i += 2) {
         _l = transLength(_cmds[i]);
-        console.log('commands length +=', _l);
+        // console.log('commands length +=', _l);
         if (isNaN(_l)) {
             return false;
         }
@@ -110,9 +106,9 @@ net.createServer({allowHalfOpen: false}, function(client) {
         ClientCon = new connection(con);
 
         ClientCon.bufferAppend(data);
-        console.log('Data in connection buffer', ClientCon.buffer.toString('utf8'));
+        // console.log('Data in connection buffer', ClientCon.buffer.toString('utf8'));
         var protocol = ClientCon.parseProtocol(ClientCon.buffer);
-        console.log('Parsed protocol', protocol);
+        // console.log('Parsed protocol', protocol);
         if(protocol === false){
             return;
         }
@@ -128,7 +124,7 @@ net.createServer({allowHalfOpen: false}, function(client) {
         // TODO: Add proxy rules
 
         remoteWrite.write(protocol.data);
-        console.log("Write data to remote", protocol.data.toString('utf8'));
+        // console.log("Write data to remote", protocol.data.toString('utf8'));
 
         client.on('data', function(data) {
 
@@ -136,8 +132,11 @@ net.createServer({allowHalfOpen: false}, function(client) {
             if (_protocol === false) {
                 return;
             }
-            // TODO: if(_protocol.cmd in GCmdMap)
-            remoteWrite.write(_protocol.data);
+            if(GCmdMap[_protocol.cmd] === true){
+                remoteWrite.write(_protocol.data);
+            }else{
+                remoteRead.write(_protocol.data);
+            }
             ClientCon.bufferPop(_protocol.data.length);
         });
 
@@ -183,6 +182,6 @@ net.createServer({allowHalfOpen: false}, function(client) {
 }).listen(localPort);
 
 function transLength(s) {
-    console.log("Trans string to Lenght", s, parseInt(s.slice(1)));
+    // console.log("Trans string to Lenght", s, parseInt(s.slice(1)));
     return parseInt(s.slice(1));
 };

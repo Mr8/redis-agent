@@ -7,5 +7,11 @@
         "remoteWritePort": 6601,
         "remoteReadAdd": "127.0.0.1",
         "remoteReadPort": 6601
+    },
+    "cmdMap": {
+        "set": true,
+        "append": true,
+        "mset": true,
+        "lpush": true
     }
 }
