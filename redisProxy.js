@@ -1,6 +1,7 @@
 var net = require('net');
+var configData = require('./config.json')
 
-var localPort = 10086;
+var localPort = configData.local.port;
 
 function connection(config) {
     this.buffer = new Buffer(0);
@@ -15,9 +16,14 @@ var GCmdMap = {
 }
 
 
-var GremoteConfig = {
-    address: '127.0.0.1',
-    port: 6601,
+var GremoteWriteConfig = {
+    address: configData.remote.remoteWriteAdd,
+    port: configData.remote.remoteWritePort,
+}
+
+var GremoteReadConfig = {
+    address: configData.remote.remoteReadAdd,
+    port: configData.remote.remoteReadPort,
 }
 
 const LENCRLF = 2;
@@ -64,8 +70,8 @@ connection.prototype.parseProtocol = function(buffer) {
     var _cmds     = s.split('\r\n').slice(0, -1);
     var _argNum   = parseInt(s.slice(1, 2))
 
-    //console.log('Get cmds ', _cmds);
-    //console.log('Get argnum ', _argNum);
+    console.log('Get cmds ', _cmds);
+    console.log('Get argnum ', _argNum);
     if (isNaN(_argNum)) {
         return false;
     }
@@ -76,7 +82,7 @@ connection.prototype.parseProtocol = function(buffer) {
 
     for( var i = 1; i < _cmds.length; i += 2) {
         _l = transLength(_cmds[i]);
-        //console.log('commands length +=', _l);
+        console.log('commands length +=', _l);
         if (isNaN(_l)) {
             return false;
         }
@@ -104,9 +110,9 @@ net.createServer({allowHalfOpen: false}, function(client) {
         ClientCon = new connection(con);
 
         ClientCon.bufferAppend(data);
-        // console.log('Data in connection buffer', ClientCon.buffer.toString('utf8'));
+        console.log('Data in connection buffer', ClientCon.buffer.toString('utf8'));
         var protocol = ClientCon.parseProtocol(ClientCon.buffer);
-        // console.log('Parsed protocol', protocol);
+        console.log('Parsed protocol', protocol);
         if(protocol === false){
             return;
         }
@@ -117,12 +123,12 @@ net.createServer({allowHalfOpen: false}, function(client) {
     })
 
     function proxyServer(protocol) {
-        var remoteWrite = net.createConnection(GremoteConfig.port, GremoteConfig.address);
-        var remoteRead = net.createConnection(GremoteConfig.port, GremoteConfig.address);
+        var remoteWrite = net.createConnection(GremoteWriteConfig.port, GremoteWriteConfig.address);
+        var remoteRead = net.createConnection(GremoteReadConfig.port, GremoteReadConfig.address);
         // TODO: Add proxy rules
 
         remoteWrite.write(protocol.data);
-        // console.log("Write data to remote", protocol.data.toString('utf8'));
+        console.log("Write data to remote", protocol.data.toString('utf8'));
 
         client.on('data', function(data) {
 
@@ -158,6 +164,10 @@ net.createServer({allowHalfOpen: false}, function(client) {
             client.end();
         });
 
+        remoteWrite.on('error', function() {
+            client.end();
+        });
+
         remoteRead.on('data', function(data) {
             client.write(data);
         });
@@ -166,10 +176,13 @@ net.createServer({allowHalfOpen: false}, function(client) {
             client.end();
         });
 
+        remoteRead.on('error', function() {
+            client.end();
+        });
     };
 }).listen(localPort);
 
 function transLength(s) {
-    // console.log("Trans string to Lenght", s, parseInt(s.slice(1)));
+    console.log("Trans string to Lenght", s, parseInt(s.slice(1)));
     return parseInt(s.slice(1));
 };
