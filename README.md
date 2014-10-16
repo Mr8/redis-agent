@@ -1,7 +1,14 @@
-## A Redis-Proxy to Depart stream of reading and writing
-## Without dependencies so without Install
-
-### START
-```
+# Reids-Agent
+@(文档整理)
+## Install
+``
+npm install
+``
+## start
+``
 npm start
+``
+## BUG Report Or suggestion
+``
+[https://github.com/Mr8/redis-agent/issues](https://github.com/Mr8/redis-agent/issues)
 ```
