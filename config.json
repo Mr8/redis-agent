@@ -1,0 +1,11 @@
+{
+    "local":{
+        "port": 10086
+    },
+    "remote": {
+        "remoteWriteAdd": "127.0.0.1",
+        "remoteWritePort": 6601,
+        "remoteReadAdd": "127.0.0.1",
+        "remoteReadPort": 6601
+    }
+}
