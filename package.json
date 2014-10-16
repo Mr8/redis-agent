@@ -5,7 +5,9 @@
   "keywords": [
        "redis",
        "proxy",
-       "zhangbo"
+       "zhangbo",
+       "redis-proxy",
+       "redis-agent"
     ],
   "maintainers": [
        {
