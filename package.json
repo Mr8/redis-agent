@@ -28,11 +28,12 @@
                "type": "MIT"
         }
     ],
-  "main": "./redisProxy.js",
+  "main": "./src/redisProxy.js",
   "scripts": {
-    "start": "node_modules/pm2/bin/pm2 start redisProxy.js -i max --name redis-agent",
+    "start": "node_modules/pm2/bin/pm2 start ./src/redisProxy.js -i max --name redis-agent",
     "show": "node_modules/pm2/bin/pm2 monit",
-    "restart": "node_modules/pm2/bin/pm2 restart redis-agent"
+    "restart": "node_modules/pm2/bin/pm2 restart redis-agent",
+    "stop": "node_modules/pm2/bin/pm2 stop redis-agent"
   },
   "repository": [
        {
