@@ -30,13 +30,17 @@
     ],
   "main": "./redisProxy.js",
   "scripts": {
-    "start": "node redisProxy.js"
+    "start": "node_modules/pm2/bin/pm2 start redisProxy.js -i max --name redis-agent",
+    "show": "node_modules/pm2/bin/pm2 monit",
+    "restart": "node_modules/pm2/bin/pm2 restart redis-agent"
   },
-  "repositories": [
+  "repository": [
        {
                "type": "git",
                "url": "https://github.com/Mr8/redis-agent"
             }
     ],
-  "dependencies":{}
+  "dependencies":{
+      "pm2": "0.11.1"
+  }
 }
