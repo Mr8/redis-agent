@@ -1,0 +1,42 @@
+{
+  "name": "redis-Agent",
+  "description": "A simple proxy for redis.",
+  "version": "0.1.0",
+  "keywords": [
+       "redis",
+       "proxy",
+       "zhangbo"
+    ],
+  "maintainers": [
+       {
+               "name": "zhangbo",
+               "email": "zhangbolinux@sina.com"
+        }
+    ],
+  "contributors": [
+       {
+               "name": "zhangbo",
+               "web": "http://cnblogs.com/bozh"
+            }
+    ],
+  "bugs": {
+       "mail": "zhangbolinux@sina.com",
+       "url": "https://github.com/Mr8/redis-agent/issues"
+    },
+  "licenses": [
+       {
+               "type": "MIT"
+        }
+    ],
+  "main": "./redisProxy.js",
+  "scripts": {
+    "start": "node redisProxy.js"
+  },
+  "repositories": [
+       {
+               "type": "git",
+               "url": "https://github.com/Mr8/redis-agent"
+            }
+    ],
+  "dependencies":{}
+}
