@@ -1,4 +1,4 @@
-# Reids-Agent
+# Redis-Agent
 
 ## Usage
 ```
